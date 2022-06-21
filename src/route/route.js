@@ -13,4 +13,7 @@ router.get("/test-me" , function(req, res){
 router.post("/authors" , author.createAuthor)
 router.post("/blogs" , blog.createBlog)
 
+router.get("/authors",author.createAuthor )
+router.get("/blogs",blog.createBlog)
+
 module.exports = router;
