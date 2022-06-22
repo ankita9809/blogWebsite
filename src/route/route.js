@@ -8,7 +8,7 @@ const blog = require("../controllers/blogController");
 router.post("/authors" , author.createAuthor)
 router.post("/blogs" , blog.createBlog)
 
-router.get("/authors",author.getAuthor)
+router.get("/authors",author.getAuthor) 
 router.get("/blogs",blog.getBlog)
 
 router.put("/blogs/:blogId", blog.updateBlog)

@@ -33,15 +33,10 @@ const blogSchema = new mongoose.Schema ({
         default : false
     }, 
     
-    deletedAt : {
-        type: String,
-        default: " "
-    },
+    deletedAt : Date,
     publishedAt: Date 
 },    
 {timestamps : true});
-
-    
 
 
 module.exports = mongoose.model ('blogDb', blogSchema)

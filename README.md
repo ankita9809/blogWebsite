@@ -3,7 +3,7 @@ Repository for backend cohort - Radon
 
 Blogging Site Mini Project Requirement
 
----------------------------------------------------Phase I------------------------------------------------------------------
+---------------------------------Phase I -----------------------------------
 
 Models
 
@@ -49,7 +49,7 @@ PUT /blogs/:blogId
 DELETE /blogs/:blogId
     1. Check if the blogId exists( and is not deleted). If it does, mark it deleted and return an HTTP status 200 without any response body.
     2. If the blog document doesn't exist then return an HTTP status of 404 with a body like this
-
+ 
 DELETE /blogs?queryParams
     1. Delete blog documents by category, authorid, tag name, subcategory name, unpublished
     2. If the blog document doesn't exist then return an HTTP status of 404 with a body like this
