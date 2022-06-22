@@ -33,7 +33,10 @@ const blogSchema = new mongoose.Schema ({
         default : false
     }, 
     
-    deletedAt : Date,
+    deletedAt : {
+        type: String,
+        default: " "
+    },
     publishedAt: Date  //new Date().toLocaleString();
 },    
 {timestamps : true});
