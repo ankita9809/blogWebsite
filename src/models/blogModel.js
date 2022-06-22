@@ -37,7 +37,7 @@ const blogSchema = new mongoose.Schema ({
         type: String,
         default: " "
     },
-    publishedAt: Date  //new Date().toLocaleString();
+    publishedAt: Date 
 },    
 {timestamps : true});
 
