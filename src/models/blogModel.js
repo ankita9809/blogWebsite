@@ -12,22 +12,19 @@ const blogSchema = new mongoose.Schema ({
     },
     authorId: {
         type: objectId,
-        required : true,
+        required : true, 
         ref : "authorDB",
     },
-    tag: [String],
+    tags: [String],
 
     category: {
         type: String,
         required : true,
-        examples: ["technology", "entertainment", "life style" , "food", "fashion"],
     },    
     subcategory : {
         tpye : [String],
-        examples : [
-            "technology"-["web development" , "mobile development", "AI", "ML"] 
-        ]},
-    isDeleted : {
+    },
+    isDeleted : { 
         type : Boolean,
         default : false
     },
@@ -35,9 +32,9 @@ const blogSchema = new mongoose.Schema ({
         type : Boolean,
         default : false
     }, 
-    createdAt : Date,
-    updatedAt : Date,
+    
     deletedAt : Date,
+    publishedAt: Date  //new Date().toLocaleString();
 },    
 {timestamps : true});
 
