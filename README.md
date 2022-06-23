@@ -72,11 +72,13 @@ Authentication
 Authorisation
     1. Make sure that only the owner of the blogs is able to edit or delete the blog.
     2. In case of unauthorized access return an appropirate error message.
-    3. Testing (Self-evaluation During Development)
-    4. To test these apis create a new collection in Postman named Project 1 Blogging
-    5. Each api should have a new request in this collection
-    6. Each request in the collection should be rightly named. Eg Create author, Create blog, Get blogs etc
-    7. Each member of each team should have their tests in running state
+
+
+Testing (Self-evaluation During Development)
+    1. To test these apis create a new collection in Postman named Project 1 Blogging
+    2. Each api should have a new request in this collection
+    3. Each request in the collection should be rightly named. Eg Create author, Create blog, Get blogs etc
+    4. Each member of each team should have their tests in running state
 
 
 ------------------------------------ Refer below sample ---------------------------------------------------
