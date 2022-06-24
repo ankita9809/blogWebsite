@@ -15,15 +15,17 @@ const blogSchema = new mongoose.Schema ({
         required : true, 
         ref : "authorDB",
     },
-    tags: [String],
+    tags: {
+            type: Array
+
+    },
 
     category: {
         type: String,
         required : true,
     },    
-    subcategory : { 
-        tpye : [String],
-    },
+    subcategory :  [String],
+    
     isDeleted : { 
         type : Boolean,
         default : false

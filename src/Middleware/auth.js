@@ -15,7 +15,9 @@ const authentication = function(req, res, next){
   if (!decodedToken)                                         // Input 1 is the token to be decoded and Input 2 was same as generated earlier
     return res.send({ status: false, msg: "token is invalid" });
     
-  //req.body.tokenId = decodedToken._id
+  req.loggedInAuthorId = decodedToken._id
+
+
   } catch(error){
     res.status(500).send({ status: false, Error: error.message })
   }
@@ -27,29 +29,38 @@ const authentication = function(req, res, next){
 const authorisation = async function (req, res, next) {
 
   try {
-    let token = req.headers["x-api-key"];
-
-    let decodedToken = jwt.verify(token, 'BloggingWebsite')
     
-    let authorId =  req.query.authorId
-    if(!authorId )
-    return res.status(401).send({status: false, msg: "AuthorId is required"})
+    // let token = req.headers["x-api-key"];
 
-    let authorDetails = await blogModel.findById(authorId)
-    if(!authorDetails)
-    return res.status(401).send({status: false, msg: "No such author exist"})
+    // let decodedToken = jwt.verify(token, 'BloggingWebsite')
+    // console.log(decodedToken)
+    
+    // let authorId =  req.query.authorId
+    // if(!authorId )
+    // return res.status(401).send({status: false, msg: "AuthorId is required"})
+
+    // let authorDetails = await blogModel.findById(authorId)
+    // if(!authorDetails)
+    // return res.status(401).send({status: false, msg: "No such author exist"})
 
 
-    let userToBeModified = authorId
-    let userLoggedIn = decodedToken.authorId
-    if (userToBeModified != userLoggedIn)
 
-      return res.status(403).send({ status: false, msg: 'Author logged is not allowed to modify the requested data' })
-  } catch (err) {
+    let userToBeModified = req.params.blogId
+    console.log(userToBeModified)
+
+    let blog = await blogModel.findById({_id: userToBeModified})
+    //let userLoggedIn = decodedToken._id
+    console.log(blog)
+    console.log(req.loggedInAuthorId)
+    if (blog.authorId == req.loggedInAuthorId){
+    next()
+    }else{
+        res.status(403).send({ status: false, msg: 'Author logged is not allowed to modify the requested data' })
+  } 
+}catch (err) {
     return res.status(500).send({status: false, msg: err.message})
   }
  
-  next();
 }
 
 

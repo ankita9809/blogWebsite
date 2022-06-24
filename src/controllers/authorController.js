@@ -4,15 +4,43 @@ const jwt=require("jsonwebtoken");
 // ----------------------------------------- CREATE AUTHOR ---------------------------------------------------------
 
 const createAuthor = async function(req, res){
-    try{
-      let author = req.body     
-      let{} = authorData
-      
-        let authorCreated = await authorModel.create(author)
-        res.status(201).send({status: true, msg: authorCreated})
-      } catch(error){
-      res.status(500).send({status: false, Error: error.mesaage })
+  try{
+    let author_data = req.body   
+    
+    if (!author_data.body) {                                 // data should not be empty
+      return res.status(400).send({ status: false, msg: "Invalid request ,Please provide author details" })
+  }
+    
+       // fname should be valid
+    if (!author_data.fname) {                                           
+        return res.status(400).send({ status: false, msg: "fname is required" })
     }
+    
+
+    if (!author_data.lname){                                            // lname should be valid
+        return res.status(400).send({ status: false, msg: "lname is required" })
+    }
+     
+
+    if (!author_data.title) {                                             // title should be valid
+        return res.status(400).send({ status: false, msg: "title is required" })
+    }
+    
+
+    if (!author_data.email) {                                              // email should be valid 
+        return res.status(400).send({ status: false, msg: "email is required" })
+    }
+    
+    if (!author_data.password) {                                              // password should be valid 
+      return res.status(400).send({ status: false, msg: "password is required" })
+  }
+
+
+      let authorCreated = await authorModel.create(author_data)
+      res.status(201).send({status: true, msg:"New author created successfully" ,author_data:authorCreated})
+    } catch(error){
+    res.status(500).send({status: false, Error: "Author already exists" })
+  }
 }
 
 // ----------------------------------------- GET AUTHOR ------------------------------------------------------------

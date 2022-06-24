@@ -15,24 +15,30 @@ const createBlog = async function (req, res) {
         authorIdArr = authorId.map((obj) => { return obj._id.toString() })
 
         // Validating blogData 
-
-        if(!blog.title){
-            return res.status(400).send({status: false, msg: "Title is required"})
-        }
         if(!blog.body){
-            return res.status(400).send({status: false, msg: "Body is required"})
+            return res.status(400).send({ status: false, msg: "body is required" })
         }
-        if(!blog.category){
-            return res.status(400).send({status: false, msg: "Category is required"})
+
+        if (!blog.title) {
+            return res.status(400).send({ status: false, msg: "Title is required" })
+        }
+        if (!blog.body) {
+            return res.status(400).send({ status: false, msg: "Body is required" })
+        }
+        if (!blog.category) {
+            return res.status(400).send({ status: false, msg: "Category is required" })
+        }
+        if (!blog.authorId) {
+            return res.status(400).send({ status: false, msg: "AuthorId is required" })
         }
 
         // if validation is true , create a blog
-        if (blog.authorId != undefined || !blog.authorId) {
+        if (blog.authorId != undefined) {
             if (authorIdArr.includes(blog.authorId)) {
                 let blogCreated = await blogModel.create(blog)
                 return res.status(201).send({ data: blogCreated })
             }
-            res.status(400).send({status: false, msg:"Author doesn't exist"})
+            res.status(400).send({ status: false, msg: "Author doesn't exist" })
         }
     } catch (error) {
         res.status(500).send({ status: false, Error: error.message })
@@ -45,31 +51,30 @@ const getBlog = async function (req, res) {
 
     try {
         const data = req.query
+
         //Validating data is empty or not
         if (Object.keys(data).length == 0) {
-            const blog = await blogModel.find({ isPublished: true, isDeleted: false })
-            if (blog.length == 0)
-                return res.status(404).send({ status: false, msg: "No such Blog Exist" })
+            const blog = await blogModel.find({ ispublished: true, isDeleted: false })
+            if (blog.length == 0) {
+                return res.status(404).send({ status: false, msg: "Blog doesn't Exists" })
+            }
             res.status(200).send({ status: true, msg: blog })
+
         }
 
         //get data by query param
+        // let filter = {ispublished: true, isDeleted: false} ------ only a specific data is req
         if (Object.keys(data).length != 0) {
+           // data.ispublished = true
+            data.isDeleted = false
+            console.log(data)
             let getBlog = await blogModel.find(data).populate("authorId")
-
-
-            //check get blogs is empty or not
             if (getBlog.length == 0) {
                 return res.status(400).send({ status: false, msg: "No such blog exist" })
-            } res.status(200).send({ status: true, data: getBlog })
-
+            }
+            res.status(200).send({ status: true, data: getBlog })
         }
-        // Authentication of Author
-        let auth_id = req.params.userId
-        let authorDetails = await authorModel.findById(auth_id);
-        if (!authorDetails)
-            return res.status(401).send({ status: false, Msg: "No such author exists" })
-        res.status(200).send({ status: true, msg: authorDetails })
+
 
     } catch (error) {
         res.status(500).send({ status: false, Error: error.message })
@@ -82,27 +87,19 @@ const updateBlog = async function (req, res) {
     try {
 
         const blogId = req.params.blogId;
+        const blogData = req.body
 
-        let blog = await blogModel.findById(blogId);
-        //Return an error if no user with the given id exists in the db
-        if (blog) {
-            if (blog.isDeleted === false && blog.ispublished === false) {
-                const updatedDate = await blogModel.findOneAndUpdate({ _id: blogId }, { $set: { ispublished: true, publishedAt: Date.now() } })
-            }
+        if (Object.keys(blogData).length == 0)
+            return res.status(400).send({ status: false, msg: "Body is required" });
 
-            const blogData = req.body
-
-            const updatedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, blogData, { new: true })
-            return res.status(200).send({ status: true, data: updatedBlog })
-        } else {
-            res.status(404).send({ status: false, msg: "Blog doesnt exist" })
-        }
-
-        return res.status(404).send({ status: false, msg: "Blog doesnt exists" })
-
-        // Authentication for Author
-
-    } catch (error) {
+        console.log("Here")
+        let blog = await blogModel.findOneAndUpdate({ _id: blogId, isDeleted: false }, 
+            {$set : {ispublished: true, body:blogData.body,title:blogData.title, publishedAt: new Date()},
+            $push: {tags: blogData.tags, subcategory: blogData.subcategory}},
+            {new:true});
+        
+        res.status(200).send({ status: true, data: blog });
+   } catch (error) {
         console.log(error)
         res.status(500).send({ status: false, Error: error.message })
     }
