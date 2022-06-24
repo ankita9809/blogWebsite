@@ -1,8 +1,5 @@
 const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
-// const { exists } = require("../models/blogModel");
-// const { query } = require("express");
-
 
 // --------------------------------------- POST /blogs --------------------------------------
 
@@ -15,7 +12,7 @@ const createBlog = async function (req, res) {
         authorIdArr = authorId.map((obj) => { return obj._id.toString() })
 
         // Validating blogData 
-        if(!blog.body){
+        if (!blog.body) {
             return res.status(400).send({ status: false, msg: "body is required" })
         }
 
@@ -63,9 +60,9 @@ const getBlog = async function (req, res) {
         }
 
         //get data by query param
-        // let filter = {ispublished: true, isDeleted: false} ------ only a specific data is req
+
         if (Object.keys(data).length != 0) {
-           // data.ispublished = true
+            // data.ispublished = true
             data.isDeleted = false
             console.log(data)
             let getBlog = await blogModel.find(data).populate("authorId")
@@ -93,13 +90,15 @@ const updateBlog = async function (req, res) {
             return res.status(400).send({ status: false, msg: "Body is required" });
 
         console.log("Here")
-        let blog = await blogModel.findOneAndUpdate({ _id: blogId, isDeleted: false }, 
-            {$set : {ispublished: true, body:blogData.body,title:blogData.title, publishedAt: new Date()},
-            $push: {tags: blogData.tags, subcategory: blogData.subcategory}},
-            {new:true});
-        
+        let blog = await blogModel.findOneAndUpdate({ _id: blogId, isDeleted: false },
+            {
+                $set: { ispublished: true, body: blogData.body, title: blogData.title, publishedAt: new Date() },
+                $push: { tags: blogData.tags, subcategory: blogData.subcategory }
+            },
+            { new: true });
+
         res.status(200).send({ status: true, data: blog });
-   } catch (error) {
+    } catch (error) {
         console.log(error)
         res.status(500).send({ status: false, Error: error.message })
     }
