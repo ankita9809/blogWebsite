@@ -6,10 +6,12 @@ const jwt=require("jsonwebtoken");
 const createAuthor = async function(req, res){
     try{
       let author = req.body     
+      let{} = authorData
+      
         let authorCreated = await authorModel.create(author)
         res.status(201).send({status: true, msg: authorCreated})
       } catch(error){
-      res.status(500).send({status: false, Error: "Author already exists" })
+      res.status(500).send({status: false, Error: error.mesaage })
     }
 }
 
@@ -30,7 +32,7 @@ const authorLogin = async function (req, res) {
     if (!user)
       return res.send({
         status: false,
-        msg: "username or the password is not corerct",
+        msg: "INVALID CREDENTIALS",
       });
       let payload = {_id : user._id}                      //Setting the payload
       let token = jwt.sign(payload, "BloggingWebsite");

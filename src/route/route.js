@@ -16,11 +16,11 @@ router.post("/login", author.authorLogin)
 //---------------------- CREATE and GET Blog using JWT ----------------------------------
 
 router.post("/blogs" ,MW.authentication, blog.createBlog)
-router.get("/blogs",blog.getBlog)
+router.get("/blogs",MW.authentication, blog.getBlog)
 
 //---------------------- UPDATE Blog using JWT ------------------------------------------
 
-router.put("/blogs/:blogId",MW.authentication, blog.updateBlog)
+router.put("/blogs/:blogId",MW.authentication,MW.authorisation,  blog.updateBlog)
 
 //---------------------- Delete blog using JWT ------------------------------------------
 
