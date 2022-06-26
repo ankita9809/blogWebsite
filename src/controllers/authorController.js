@@ -8,10 +8,10 @@ const createAuthor = async function (req, res) {
     let author_data = req.body
 
     //--------------------------  Getting data from body  -------------------------------------
-    // if (!author_data.body) {
-    //   return res.status(400).send({ status: false, msg: "Invalid request ,Please provide author details" })
-    // }
-    // -------------------------- Vhecking for all the firelds --------------------------------
+    if (!author_data) {
+      return res.status(400).send({ status: false, msg: "Invalid request ,Please provide author details" })
+    }
+    // -------------------------- Checking for all the firelds --------------------------------
     if (!author_data.fname) {
       return res.status(400).send({ status: false, msg: "fname is required" })
     }
@@ -27,7 +27,6 @@ const createAuthor = async function (req, res) {
     if (!author_data.password) {
       return res.status(400).send({ status: false, msg: "password is required" })
     }
-
 
     let authorCreated = await authorModel.create(author_data)
     res.status(201).send({ status: true, msg: "New author created successfully", author_data: authorCreated })
@@ -46,22 +45,26 @@ const getAuthor = async function (req, res) {
 // --------------------------------------- AUTHOR LOGIN ------------------------------------------------------------
 
 const authorLogin = async function (req, res) {
+  try{
   let userName = req.body.emailId;
   let password = req.body.password;
 
   let user = await authorModel.findOne({ emailId: userName, password: password });
-  if (!user)
-    return res.send({
-      status: false,
-      msg: "INVALID CREDENTIALS",
-    });
+  if(!userName && !password){
+    return res.status(400).send({status: false, msg: "Data is required"})
+  }
+  if(!user){
+    return res.status(401).send({status: false, msg: "INVALID CREDENTIALS"});
+  }
+
   let payload = { _id: user._id }                      //Setting the payload
   let token = jwt.sign(payload, "BloggingWebsite");
   res.setHeader("x-api-key", token);
   res.send({ status: true, token: token });
+ } catch(error){
+  res.status(500).send({staus: false, msg: error.message})
+ }
 };
-
-
 
 module.exports.createAuthor = createAuthor;
 module.exports.getAuthor = getAuthor
