@@ -2,10 +2,10 @@ const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
 const mongoose = require('mongoose')
 
-//---------------------------------------- hoisting ----------------------------------
+//---------------------------------------- Hoisting ----------------------------------
 const isValid = function (value) {
-    if (typeof value === 'undefined' || value === null) return false
-    if (typeof value === 'string' && value.trim().length === 0) return false
+    if (typeof value === 'undefined' || value === null) return false        //object id
+    if (typeof value === 'string' && value.trim().length === 0) return false        //string
     return true
 }
 
@@ -64,7 +64,7 @@ const getBlog = async function (req, res) {
 
         //Validating data is empty or not
         if (Object.keys(data).length == 0) {
-            const blog = await blogModel.find({ ispublished: true, isDeleted: false })
+            const blog = await blogModel.find({ isPublished: true, isDeleted: false })
             if (blog.length == 0) {
                 return res.status(404).send({ status: false, msg: "Blog doesn't Exists" })
             }
@@ -75,8 +75,8 @@ const getBlog = async function (req, res) {
         //get data by query param
 
         if (Object.keys(data).length != 0) {
-            // data.ispublished = true
-            //data.isDeleted = false
+            // data.isPublished = true
+            data.isDeleted = false
             console.log(data)
             let getBlog = await blogModel.find(data).populate("authorId")
             if (getBlog.length == 0) {
@@ -105,7 +105,7 @@ const updateBlog = async function (req, res) {
         console.log("Here")
         let blog = await blogModel.findOneAndUpdate({ _id: blogId, isDeleted: false },
             {
-                $set: { ispublished: true, body: blogData.body, title: blogData.title, publishedAt: new Date() },
+                $set: { isPublished: true, body: blogData.body, title: blogData.title, publishedAt: new Date() },
                 $push: { tags: blogData.tags, subcategory: blogData.subcategory }
             },
             { new: true });
@@ -141,10 +141,10 @@ const deleteQueryParams = async function (req, res) {
     try {
         const data = req.query
         const filterQuery = { isDeleted: false, deletedAt: null } // base condtion
-        console.log(data)
+       //console.log(data)
 
         if (Object.keys(data).length == 0) {
-            return res.status(404).send({ status: false, msg: "No such Blog Exist" })
+            return res.status(404).send({ status: false, msg: "No such Blog Exist, Please provide filters" })
         }
 
         let { authorId, category, subcategory, tags, isPublished } = data             // destructuring data
@@ -164,25 +164,27 @@ const deleteQueryParams = async function (req, res) {
             filterQuery["isPublished"] = isPublished
         }
 
-        console.log(filterQuery)
+        //console.log(filterQuery)
 
 
-        const deletedBlogs = await blogModel.find(filterQuery)          //
+        const deletedBlogs = await blogModel.find(filterQuery)          
         if (deletedBlogs.length === 0) {
-            return res.status(404).send({ status: false, error: "blog not found" })
+            return res.status(404).send({ status: false, error: "Blog is empty" })
         }
-        const blogAuth = deletedBlogs.filter((blog) => {                         // authorisation using map
+        const blogAuth = deletedBlogs.filter((blog) => {                         // authorisation using filter
             if (blog.authorId == req.loggedInAuthorId)
                 return blog._id
+                 else 
+               return res.status(404).send({status: false, msg: "User is not authorised to do changes"})
         })
 
 
         const deletedBlogs1 = await blogModel.updateMany({ _id: { $in: deletedBlogs } }, { $set: { isDeleted: true, deletedAt: new Date() } })
 
-        console.log(deletedBlogs1)
+       // console.log(deletedBlogs1)
 
 
-        return res.status(201).send({ status: true, msg: "Blogs Deleted Successfully", data: deletedBlogs1 })
+        return res.status(201).send({ status: true, msg: "Blogs Deleted Successfully"})
 
     }
 
