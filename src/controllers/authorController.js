@@ -8,9 +8,9 @@ const createAuthor = async function (req, res) {
     let author_data = req.body
 
     //--------------------------  Getting data from body  -------------------------------------
-    if (!author_data.body) {
-      return res.status(400).send({ status: false, msg: "Invalid request ,Please provide author details" })
-    }
+    // if (!author_data.body) {
+    //   return res.status(400).send({ status: false, msg: "Invalid request ,Please provide author details" })
+    // }
     // -------------------------- Vhecking for all the firelds --------------------------------
     if (!author_data.fname) {
       return res.status(400).send({ status: false, msg: "fname is required" })
@@ -40,7 +40,7 @@ const createAuthor = async function (req, res) {
 
 const getAuthor = async function (req, res) {
   let alldata = await authorModel.find()
-  res.status(200).send({ status: true, msg: alldata })
+  res.status(200).send({ status: true, msg: alldata }) 
 }
 
 // --------------------------------------- AUTHOR LOGIN ------------------------------------------------------------

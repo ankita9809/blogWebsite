@@ -127,9 +127,12 @@ const deleteBlog = async function (req, res) {
 const deleteQueryParams = async function (req, res) {
     try {
         const data = req.query
+        console.log(data)
+        
         if (Object.keys(data).length == 0) {
             return res.status(404).send({ status: false, msg: "No such Blog Exist" })
         }
+
         const deletedBlogs = await blogModel.find({ isDeleted: false }).updateMany(data, { isDeleted: true, deletedAt: new Date() }, { new: true })
         if (deletedBlogs.matchedCount == 0) {
             return res.status(404).send({ status: true, error: "blog not found" })
