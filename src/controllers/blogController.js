@@ -1,5 +1,18 @@
 const blogModel = require("../models/blogModel");
 const authorModel = require("../models/authorModel");
+const mongoose = require('mongoose')
+
+//---------------------------------------- hoisting ----------------------------------
+const isValid = function (value) {
+    if (typeof value === 'undefined' || value === null) return false
+    if (typeof value === 'string' && value.trim().length === 0) return false
+    return true
+}
+
+const isValidObjectId = function (value) {            //for validating object id
+    return mongoose.Types.ObjectId.isValid(value) //returns boolean values
+}
+
 
 // --------------------------------------- POST /blogs --------------------------------------
 
@@ -116,7 +129,7 @@ const deleteBlog = async function (req, res) {
         }
         //.send({status: true, msg: deletedBlog})
         let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true, deletedAt: new Date() }, { new: true })
-       res.status(201).send({status: true, msg: deletedBlog})
+        res.status(201).send({ status: true, msg: deletedBlog })
     } catch (error) {
         res.status(500).send({ status: false, Error: error.message })
     }
@@ -127,19 +140,52 @@ const deleteBlog = async function (req, res) {
 const deleteQueryParams = async function (req, res) {
     try {
         const data = req.query
+        const filterQuery = { isDeleted: false, deletedAt: null } // base condtion
         console.log(data)
-        
+
         if (Object.keys(data).length == 0) {
             return res.status(404).send({ status: false, msg: "No such Blog Exist" })
         }
 
-        const deletedBlogs = await blogModel.find({ isDeleted: false }).updateMany(data, { isDeleted: true, deletedAt: new Date() }, { new: true })
-        if (deletedBlogs.matchedCount == 0) {
-            return res.status(404).send({ status: true, error: "blog not found" })
+        let { authorId, category, subcategory, tags, isPublished } = data             // destructuring data
+        if (isValid(authorId) && isValidObjectId(authorId)) {                     // use for validating, base => new keys and values are assigned
+            filterQuery["authorId"] = authorId
         }
-        return res.status(201).send({ status: true, data: deletedBlogs })
+        if (isValid(category)) {
+            filterQuery["category"] = category
+        }
+        if (isValid(subcategory)) {
+            filterQuery["subcategory"] = subcategory
+        }
+        if (isValid(tags)) {
+            filterQuery["tags"] = tags
+        }
+        if (isValid(isPublished)) {
+            filterQuery["isPublished"] = isPublished
+        }
+
+        console.log(filterQuery)
+
+
+        const deletedBlogs = await blogModel.find(filterQuery)          //
+        if (deletedBlogs.length === 0) {
+            return res.status(404).send({ status: false, error: "blog not found" })
+        }
+        const blogAuth = deletedBlogs.filter((blog) => {                         // authorisation using map
+            if (blog.authorId == req.loggedInAuthorId)
+                return blog._id
+        })
+
+
+        const deletedBlogs1 = await blogModel.updateMany({ _id: { $in: deletedBlogs } }, { $set: { isDeleted: true, deletedAt: new Date() } })
+
+        console.log(deletedBlogs1)
+
+
+        return res.status(201).send({ status: true, msg: "Blogs Deleted Successfully", data: deletedBlogs1 })
 
     }
+
     catch (err) {
         res.status(500).send({ status: false, msg: err.message });
     }

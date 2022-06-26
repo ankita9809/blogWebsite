@@ -25,7 +25,7 @@ router.put("/blogs/:blogId", MW.authentication, MW.authorisation, blog.updateBlo
 //---------------------- Delete blog using JWT ------------------------------------------
 
 router.delete("/blogs/:blogId", MW.authentication, MW.authorisation, blog.deleteBlog)
-router.delete("/blogs", MW.authentication, MW.authorisation, blog.deleteQueryParams)
+router.delete("/blogs", MW.authentication, blog.deleteQueryParams)
 
 
 

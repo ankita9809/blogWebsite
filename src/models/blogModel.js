@@ -10,7 +10,7 @@ const blogSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    authorId: { 
+    authorId: {
         type: objectId,
         required: true,
         ref: "authorDB",
@@ -29,7 +29,7 @@ const blogSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    ispublished: {
+    isPublished: {
         type: Boolean,
         default: false
     },

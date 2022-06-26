@@ -39,31 +39,31 @@ const createAuthor = async function (req, res) {
 
 const getAuthor = async function (req, res) {
   let alldata = await authorModel.find()
-  res.status(200).send({ status: true, msg: alldata }) 
+  res.status(200).send({ status: true, msg: alldata })
 }
 
 // --------------------------------------- AUTHOR LOGIN ------------------------------------------------------------
 
 const authorLogin = async function (req, res) {
-  try{
-  let userName = req.body.emailId;
-  let password = req.body.password;
+  try {
+    let userName = req.body.emailId;
+    let password = req.body.password;
 
-  let user = await authorModel.findOne({ emailId: userName, password: password });
-  if(!userName && !password){
-    return res.status(400).send({status: false, msg: "Data is required"})
-  }
-  if(!user){
-    return res.status(401).send({status: false, msg: "INVALID CREDENTIALS"});
-  }
+    let user = await authorModel.findOne({ emailId: userName, password: password });
+    if (!userName && !password) {
+      return res.status(400).send({ status: false, msg: "Data is required" })
+    }
+    if (!user) {
+      return res.status(401).send({ status: false, msg: "INVALID CREDENTIALS" });
+    }
 
-  let payload = { _id: user._id }                      //Setting the payload
-  let token = jwt.sign(payload, "BloggingWebsite");
-  res.setHeader("x-api-key", token);
-  res.send({ status: true, token: token });
- } catch(error){
-  res.status(500).send({staus: false, msg: error.message})
- }
+    let payload = { _id: user._id }                      //Setting the payload
+    let token = jwt.sign(payload, "BloggingWebsite");
+    res.setHeader("x-api-key", token);
+    res.send({ status: true, token: token });
+  } catch (error) {
+    res.status(500).send({ staus: false, msg: error.message })
+  }
 };
 
 module.exports.createAuthor = createAuthor;
