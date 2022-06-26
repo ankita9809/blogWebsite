@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const blogModel = require("../models/blogModel");
 
 
-//--------------------------------- AUTHENTICATION MIDDLEWARE -------------------------------------------------------------------------------------------
+//--------------------------------- AUTHENTICATION MIDDLEWARE ------------------------------------------------------------------------
 
 const authentication = function (req, res, next) { 
   try {
