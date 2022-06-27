@@ -8,21 +8,26 @@ const authentication = function (req, res, next) {
   try {
     let token = req.headers["x-api-key"];         //Getting token from header
     if (!token) token = req.headers["X-api-key"];     //checking token with Uppercase
-    if (!token) return res.status(400).send({ status: false, msg: "token must be present" });    //If neither condition satisfies & no token is present in the request header return error
+    if (!token) return res.status(401).send({ status: false, msg: "token must be present" });    //If neither condition satisfies & no token is present in the request header return error
 
-    console.log(token);
-
-    let decodedToken = jwt.verify(token, "BloggingWebsite");   // verifying token with secret key present in author login
-
-    if (!decodedToken)
+  console.log(token);
+  
+    let decodedToken = jwt.verify(token, "BloggingWebsite", function(error, decodedToken){
+      if(error)
       return res.status(401).send({ status: false, msg: "token is invalid" });
+      req.loggedInAuthorId = decodedToken._id
 
-    req.loggedInAuthorId = decodedToken._id       // stroing id present in decodedToken in req.loggedInAuthorId
+    });   // verifying token with secret key present in author login
+
+    // if (!decodedToken)
+    //   return res.status(401).send({ status: false, msg: "token is invalid" });
+
+    // req.loggedInAuthorId = decodedToken._id       // stroing id present in decodedToken in req.loggedInAuthorId
 
     next()            //if token is present next() will call the respective API            
 
   } catch (error) {
-    res.status(500).send({ status: false, Error: error.message })
+    return res.status(500).send({ status: false, Error: error.message })
   }
 
 

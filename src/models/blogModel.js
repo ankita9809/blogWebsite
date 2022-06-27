@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const objectId = mongoose.Schema.Types.ObjectId
+const objectId = mongoose.Schema.Types.ObjectId 
 
 const blogSchema = new mongoose.Schema({
     title: {
@@ -40,4 +40,4 @@ const blogSchema = new mongoose.Schema({
     { timestamps: true });
 
 
-module.exports = mongoose.model('blogDb', blogSchema)
+module.exports = mongoose.model('blogDb', blogSchema)  // models => wrapper to schema to perform CRUD Opertaions
