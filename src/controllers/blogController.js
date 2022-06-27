@@ -68,7 +68,7 @@ const getBlog = async function (req, res) {
             if (blog.length == 0) {
                 return res.status(404).send({ status: false, msg: "Blog doesn't Exists, field is required." })
             }
-            res.status(200).send({ status: true, msg: blog })
+            res.status(200).send({ status: true, data: blog })
 
         }
 
@@ -110,7 +110,7 @@ const updateBlog = async function (req, res) {
             },
             { new: true });
 
-        res.status(200).send({ status: true, msg: blog });
+        res.status(200).send({ status: true, data: blog });
     } catch (error) {
         console.log(error)
         res.status(500).send({ status: false, Error: error.message })
@@ -129,7 +129,7 @@ const deleteBlog = async function (req, res) {
         }
         //.send({status: true, msg: deletedBlog})
         let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true, deletedAt: new Date() }, { new: true })
-        res.status(201).send({ status: true, msg: deletedBlog })
+        res.status(201).send({ status: true, data: deletedBlog })
     } catch (error) {
         res.status(500).send({ status: false, Error: error.message })
     }

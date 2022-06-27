@@ -39,7 +39,7 @@ const createAuthor = async function (req, res) {
 
 const getAuthor = async function (req, res) {
   let alldata = await authorModel.find()
-  res.status(200).send({ status: true, msg: alldata })
+  res.status(201).send({ status: true, data: alldata })
 }
 
 // --------------------------------------- AUTHOR LOGIN ------------------------------------------------------------
