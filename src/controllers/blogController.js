@@ -26,14 +26,14 @@ const createBlog = async function (req, res) {
 
         // Validating blogData 
         if (!blog.body) {
-            return res.status(400).send({ status: false, msg: "body is required" })
+            return res.status(400).send({ status: false, msg: "Body is required" })
         }
 
         if (!blog.title) {
             return res.status(400).send({ status: false, msg: "Title is required" })
         }
-        if (!blog.body) {
-            return res.status(400).send({ status: false, msg: "Body is required" })
+        if (!blog.tags) {
+            return res.status(400).send({ status: false, msg: "Tags is required" })
         }
         if (!blog.category) {
             return res.status(400).send({ status: false, msg: "Category is required" })
@@ -66,7 +66,7 @@ const getBlog = async function (req, res) {
         if (Object.keys(data).length == 0) {
             const blog = await blogModel.find({ isPublished: true, isDeleted: false })
             if (blog.length == 0) {
-                return res.status(404).send({ status: false, msg: "Blog doesn't Exists" })
+                return res.status(404).send({ status: false, msg: "Blog doesn't Exists, field is required." })
             }
             res.status(200).send({ status: true, msg: blog })
 
@@ -80,7 +80,7 @@ const getBlog = async function (req, res) {
             console.log(data)
             let getBlog = await blogModel.find(data).populate("authorId")
             if (getBlog.length == 0) {
-                return res.status(404).send({ status: false, msg: "No such blog exist" })
+                return res.status(404).send({ status: false, msg: "No such blog exist, Token and AuthorId is different." })
             }
             res.status(200).send({ status: true, data: getBlog })
         }

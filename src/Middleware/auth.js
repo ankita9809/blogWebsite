@@ -29,13 +29,13 @@ const authentication = function (req, res, next) {
 
 };
 
-//--------------------------------- AUTHORISATION MIDDLEWARE -------------------------------------------------------------------------------------------
+//--------------------------------- AUTHORISATION MIDDLEWARE ----------------------------------------------------------------------------------
 
 const authorisation = async function (req, res, next) {
 
   try {
-    // let token = req.headers["x-api-key"];
-    // let authordata = jwt.verify(token, "BloggingWebsite");
+     //let token = req.headers["x-api-key"];
+     //let authordata = jwt.verify(token, "BloggingWebsite");
 
     let userToBeModified = req.params.blogId
     console.log(userToBeModified)
