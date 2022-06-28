@@ -32,9 +32,7 @@ const createBlog = async function (req, res) {
         if (!blog.title) {
             return res.status(400).send({ status: false, msg: "Title is required" })
         }
-        if(["Mr", "Mrs", "Miss"].indexOf(blog.title) == -1){
-            return res.status(400).send({ status: false, msg: "Title is required" })// enum checked
-        }
+        
         if (!blog.tags) {
             return res.status(400).send({ status: false, msg: "Tags is required" })
         }
@@ -81,7 +79,7 @@ const getBlog = async function (req, res) {
             // data.isPublished = true
             data.isDeleted = false
             console.log(data)
-            let getBlog = await blogModel.find(data)    //.populate("authorId")
+            let getBlog = await blogModel.find(data).populate("authorId")
             if (getBlog.length == 0) {
                 return res.status(404).send({ status: false, msg: "No such blog exist, Token and AuthorId is different." })
             }
@@ -105,7 +103,7 @@ const updateBlog = async function (req, res) {
         if (Object.keys(blogData).length == 0)
             return res.status(404).send({ status: false, msg: "Body is required" });
 
-        console.log("Here")
+        //console.log("Here")
         let blog = await blogModel.findOneAndUpdate({ _id: blogId, isDeleted: false },
             {
                 $set: { isPublished: true, body: blogData.body, title: blogData.title, publishedAt: new Date() },
@@ -131,8 +129,8 @@ const deleteBlog = async function (req, res) {
             return res.status(404).send({ status: false, message: "No such blogId exists" })
         }
         //.send({status: true, msg: deletedBlog})
-        let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true, deletedAt: new Date() }, { new: true })
-        res.status(201).send({ status: true, data: deletedBlog })
+        let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true, deletedAt: new Date() })
+        res.status(200).send({ status: true, msg: "Data is successfully deleted" })
     } catch (error) {
         res.status(500).send({ status: false, Error: error.message })
     }

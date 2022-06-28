@@ -3,8 +3,8 @@ const router = express.Router();
 const author = require("../controllers/authorController");
 const blog = require("../controllers/blogController");
 const MW = require("../Middleware/auth")
-
-
+ 
+ 
 //---------------------- CREATE and GET Author ------------------------------------------
 router.post("/authors", author.createAuthor)
 router.get("/authors", author.getAuthor)

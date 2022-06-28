@@ -17,13 +17,7 @@ const authentication = function (req, res, next) {
       return res.status(401).send({ status: false, msg: "token is invalid" });
       req.loggedInAuthorId = decodedToken._id
 
-    });   // verifying token with secret key present in author login
-
-    // if (!decodedToken)
-    //   return res.status(401).send({ status: false, msg: "token is invalid" });
-
-    // req.loggedInAuthorId = decodedToken._id       // stroing id present in decodedToken in req.loggedInAuthorId
-
+    });  
     next()            //if token is present next() will call the respective API            
 
   } catch (error) {

@@ -8,9 +8,9 @@ const createAuthor = async function (req, res) {
     let author_data = req.body
 
     //--------------------------  Getting data from body  -------------------------------------
-    if (!author_data) {
-      return res.status(400).send({ status: false, msg: "Invalid request ,Please provide author details" })
-    }
+    // if (!author_data) {
+    //   return res.status(400).send({ status: false, msg: "Invalid request ,Please provide author details" })
+    // }
     // -------------------------- Checking for all the firelds --------------------------------
     if (!author_data.fname) {
       return res.status(400).send({ status: false, msg: "fname is required" })
@@ -21,6 +21,9 @@ const createAuthor = async function (req, res) {
     if (!author_data.title) {
       return res.status(400).send({ status: false, msg: "title is required" })
     }
+    if(["Mr", "Mrs", "Miss"].indexOf(blog.title) == -1){
+      return res.status(400).send({ status: false, msg: "Invalid title, Please select from Mr, Mrs, Miss" })// enum checked
+  }
     if (!author_data.email) {
       return res.status(400).send({ status: false, msg: "email is required" })
     }
