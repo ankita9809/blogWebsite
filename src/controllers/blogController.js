@@ -110,8 +110,12 @@ const updateBlog = async function (req, res) {
                 $push: { tags: blogData.tags, subcategory: blogData.subcategory }
             },
             { new: true });
+            if (!blog) {
+                return res.status(404).send({ status: false, msg: "No such Blog Exist...!" })
+            }
 
             return res.status(200).send({ status: true, data: blog });
+            
     } catch (error) {
         console.log(error)
         return res.status(500).send({ status: false, Error: error.message })

@@ -75,7 +75,7 @@ const getAuthor = async function (req, res) {
 
   const authorLogin = async function (req, res) {
     try {
-      let userName = req.body.email;
+      let userName = req.body.userName;
       let password = req.body.password;
 
       console.log(userName)
