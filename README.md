@@ -5,7 +5,8 @@ Blogging Site Mini Project Requirement
 
 ---------------------------------Phase I -----------------------------------
 
-Models
+Models 
+
 
 Author Model
 { fname: { mandatory}, lname: {mandatory}, title: {mandatory, enum[Mr, Mrs, Miss]}, email: {mandatory, valid email, unique}, password: {mandatory} }

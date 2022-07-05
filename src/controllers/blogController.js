@@ -61,6 +61,7 @@ const createBlog = async function (req, res) {
 const getBlog = async function (req, res) {
 
     try {
+
         const data = req.query
 
         //Validating data is empty or not
@@ -81,7 +82,7 @@ const getBlog = async function (req, res) {
             console.log(data)
             let getBlog = await blogModel.find(data).populate("authorId")
             if (getBlog.length == 0) {
-                return res.status(404).send({ status: false, msg: "No such blog exist, Token and AuthorId is different." })
+                return res.status(404).send({ status: false, msg: "No such blog exist, Please provide correct data." })
             }
             res.status(200).send({ status: true, data: getBlog })
         }
@@ -110,9 +111,7 @@ const updateBlog = async function (req, res) {
                 $push: { tags: blogData.tags, subcategory: blogData.subcategory }
             },
             { new: true });
-            if (!blog) {
-                return res.status(404).send({ status: false, msg: "No such Blog Exist...!" })
-            }
+            
 
             return res.status(200).send({ status: true, data: blog });
             

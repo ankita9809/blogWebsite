@@ -78,8 +78,8 @@ const getAuthor = async function (req, res) {
       let userName = req.body.userName;
       let password = req.body.password;
 
-      console.log(userName)
-      console.log(password)
+     // console.log(userName)
+      //console.log(password)
 
       let user = await authorModel.findOne({ email: userName, password: password });
       if (Object.keys(req.body).length == 0) {
