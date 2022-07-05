@@ -41,7 +41,7 @@ const createBlog = async function (req, res) {
         }
         if (!blog.authorId) {
             return res.status(400).send({ status: false, msg: "AuthorId is required" })
-        }
+        } 
 
         // if validation is true , create a blog
         if (blog.authorId != undefined) {
@@ -124,6 +124,7 @@ const updateBlog = async function (req, res) {
 const deleteBlog = async function (req, res) {
     try {
         let blogId = req.params.blogId
+        
         let blog = await blogModel.findById(blogId)
         if (blog.isDeleted === true) {
             return res.status(404).send({ status: false, message: "No such blogId exists" })
@@ -185,7 +186,7 @@ const deleteQueryParams = async function (req, res) {
        // console.log(deletedBlogs1)
 
 
-        return res.status(201).send({ status: true, msg: "Blogs Deleted Successfully"})
+        return res.status(200).send({ status: true, msg: "Blogs Deleted Successfully"})
 
     }
 

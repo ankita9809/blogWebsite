@@ -10,12 +10,15 @@ const authentication = function (req, res, next) {
     if (!token) token = req.headers["X-api-key"];     //checking token with Uppercase
     if (!token) return res.status(401).send({ status: false, msg: "token must be present" });    //If neither condition satisfies & no token is present in the request header return error
 
-  console.log(token);
+  console.log(token); 
   
     let decodedToken = jwt.verify(token, "BloggingWebsite", function(error, decodedToken){
       if(error)
       return res.status(401).send({ status: false, msg: "token is invalid" });
+      
       req.loggedInAuthorId = decodedToken._id
+      //console.log(decodedToken._id)
+      //console.log(req.loggedInAuthorId)
 
     });  
     next()            //if token is present next() will call the respective API            
@@ -23,10 +26,11 @@ const authentication = function (req, res, next) {
   } catch (error) {
     return res.status(500).send({ status: false, Error: error.message })
   }
-
-
-
 };
+
+
+
+
 
 //--------------------------------- AUTHORISATION MIDDLEWARE ----------------------------------------------------------------------------------
 
